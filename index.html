@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Simple Group Chat Application</title>
+</head>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"
+    integrity="sha512-xbQU0+iHqhVt7VIXi6vBJKPh3IQBF5B84sSHdjKiSccyX/1ZI7Vnkt2/8y8uruj63/DVmCxfUNohPNruthTEQA=="
+    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<script>
+    var socket = io();
+    function setUserName() {
+        if (document.getElementById('name').value == '') {
+            alert('Please enter your name!')
+        } else {
+            socket.emit('setUserName', document.getElementById('name').value)
+        }
+    }
+</script>
+
+<body>
+    <h1>Group Chat App</h1>
+    <div class="new-user-form">
+        <input type="text" id="name" name="name" placeholder="Enter your name">
+        <button type="button" onclick="setUserName()"> Chat with users</button>
+    </div>
+</body>
+
+</html>
