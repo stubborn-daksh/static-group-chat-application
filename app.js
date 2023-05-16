@@ -21,7 +21,13 @@ io.on('connection', function (socket) {
             socket.emit('setUser', { username: data })
         }
     })
+
+    socket.on('msg', function (data) {
+        console.log(data)
+        io.sockets.emit('newmsg', data);
+    })
 })
+
 
 
 http.listen(3000, function () {

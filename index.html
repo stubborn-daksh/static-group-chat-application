@@ -10,7 +10,8 @@
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.6.1/socket.io.js"
     integrity="sha512-xbQU0+iHqhVt7VIXi6vBJKPh3IQBF5B84sSHdjKiSccyX/1ZI7Vnkt2/8y8uruj63/DVmCxfUNohPNruthTEQA=="
-    crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    crossorigin="anonymous" referrerpolicy="no-referrer">
+    </script>
 
 <script>
     var socket = io();
@@ -21,14 +22,54 @@
             socket.emit('setUserName', document.getElementById('name').value)
         }
     }
+
+    var user;
+
+    socket.on('userExists', function (data) {
+        document.getElementById('existsError').innerHTML = data;
+    });
+
+    socket.on('setUser', function (data) {
+        user = data.username;
+        var newUserForm = document.getElementById('new-user-form');
+        console.log(newUserForm);
+        if (newUserForm) {
+            newUserForm.innerHTML = `
+            <input type="text" id="message">
+            <button type="button" onclick="sendMessage()">Send</button>
+            <div id="messages-container"></div>
+        `;
+        }
+    });
+
+    function sendMessage() {
+        var message = document.getElementById('message').value;
+        if (message !== '') {
+            document.getElementById('message').value = '';
+            socket.emit('msg', { message: message, user: user });
+        }
+    }
+
+    socket.on('newmsg', function (data) {
+        if (user) {
+            document.getElementById('messages-container').innerHTML += '\
+        <div>\
+           <b>'+ data.user + '</b> : ' + data.message + '  \
+        </div>';
+        }
+    })
+
 </script>
 
 <body>
     <h1>Group Chat App</h1>
-    <div class="new-user-form">
+    <div id="new-user-form">
+        <div id="existsError" style="color:red;"></div>
         <input type="text" id="name" name="name" placeholder="Enter your name">
         <button type="button" onclick="setUserName()"> Chat with users</button>
     </div>
+
+
 </body>
 
 </html>
